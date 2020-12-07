@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'biz.aQute.bnd.builder'
+}
+
+ext {
+    rdf4j = '3.4.4'
+}
+
+java {
+    jar {
+        archiveAppendix.set('rdf')
+        bnd(
+                'Bundle-Name': 'Hierarchical Data Transformations Java JSON',
+                'Bundle-SymbolicName': 'hdt-java-json',
+                '-exportcontents': 'cz.skodape.hdt.rdf.*'
+        )
+        dependencies {
+            implementation project(':hdt-core')
+            implementation group: 'org.eclipse.rdf4j', name: 'rdf4j-model', version: rdf4j
+            implementation group: 'org.eclipse.rdf4j', name: 'rdf4j-rio-api', version: rdf4j
+            implementation group: 'org.eclipse.rdf4j', name: 'rdf4j-repository-api', version: rdf4j
+            implementation group: 'org.eclipse.rdf4j', name: 'rdf4j-rio-trig', version: rdf4j
+        }
+    }
+}

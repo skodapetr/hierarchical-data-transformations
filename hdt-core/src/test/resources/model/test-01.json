@@ -1,0 +1,29 @@
+{
+    "rootSource": "root",
+    "propertySource": "root",
+    "sources": [],
+    "transformation": {
+        "type": "primitive",
+        "selectors": [
+            {"$ref": "identity"}, {
+                "type": "Path",
+                "path": [{
+                    "predicate": "isPartOf",
+                    "reverse": true
+                }, "name"]
+            }, {
+                "type": "Filter",
+                "condition": "Contain",
+                "value": "cs",
+                "path": [{
+                    "predicate": "@language"
+                }]
+            }],
+        "constant": "42"
+    },
+    "templates": {
+        "identity": {
+            "type": "Identity"
+        }
+    }
+}

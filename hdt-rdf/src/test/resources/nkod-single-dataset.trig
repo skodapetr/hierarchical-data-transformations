@@ -1,0 +1,60 @@
+<https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560> {
+  <https://data.gov.cz/zdroj/katalog/NKOD> <http://www.w3.org/ns/dcat#dataset> <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560>;
+    <http://www.w3.org/ns/dcat#record> <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/záznam> .
+
+  <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560>
+    a <http://www.w3.org/ns/dcat#Dataset>, <https://data.gov.cz/slovník/nkod/typ-datové-sady-dle-zdroje/CkanLkod>;
+    <http://purl.org/dc/terms/title> "Mapa geometrických plánů pro katastrální území: Částkov u Tachova [618560]"@cs;
+    <http://purl.org/dc/terms/description> "Datová sada potvrzených geometrických plánů v digitální formě. Potvrzené geometrické plány obsahují budoucí stav katastrální mapy. K jejich zplatnění (promítnutí na platné katastrální mapy) dochází v procesu zápisu věcných práv do katastru (vkladem nebo záznamem). Data vycházejí z ISKN (Informačního systému katastru nemovitostí) a mají stejnou strukturu jako katastrální mapa v digitální podobě. Datová sada je poskytována jako otevřená data (licence CC-BY 4.0). Data jsou poskytována po katastrálních pracovištích v souřadnicovém systému JTSK (EPSG:5514). Jsou k dispozici ve všech katastrálních územích, kde se připravují změny katastrální mapy (včetně katastrálních území s analogovou mapou). Pro stažení jsou data komprimována (ZIP). Více katastrální zákon 256/2013 Sb., vyhláška o katastru nemovitostí č. 357/2013 Sb., vyhláška o poskytování údajů č. 358/2013 Sb. v platném znění. Data jsou poskytována v textovém formátu VFK (český národní standard). Popis formátu je publikován na webových stránkách Českého úřadu zeměměřického a katastrálního. Více katastrální zákon 256/2013 Sb., vyhláška o katastru nemovitostí č. 357/2013 Sb., vyhláška o poskytování údajů č. 358/2013 Sb. v platném znění."@cs;
+    <http://www.w3.org/ns/dcat#distribution> <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/distribuce/c605017d3bde7487d26f39497f8378e1>;
+    <http://purl.org/dc/terms/spatial> <https://linked.cuzk.cz/resource/ruian/katastralni-uzemi/618560>;
+    <http://purl.org/dc/terms/publisher> <https://data.gov.cz/zdroj/ovm/00025712>;
+    <http://www.w3.org/ns/dcat#keyword> "pozemek"@cs;
+    <http://purl.org/dc/terms/accrualPeriodicity> <http://publications.europa.eu/resource/authority/frequency/DAILY>;
+    <https://data.gov.cz/slovník/nkod/accrualPeriodicity> "R/P1D";
+    <https://data.gov.cz/slovník/nkod/ruian_code> "618560";
+    <https://data.gov.cz/slovník/nkod/ruian_type> "KU";
+    <http://purl.org/dc/terms/identifier> "CZ-00025712-CUZK_GMPL-KU-VFK_618560";
+    <http://www.w3.org/ns/dcat#contactPoint> <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/kontaktní-bod> .
+
+  <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/kontaktní-bod>
+    a <http://www.w3.org/2006/vcard/ns#Organization>;
+    <http://www.w3.org/2006/vcard/ns#fn> "Český úřad zeměměřický a katastrální"@cs;
+    <http://www.w3.org/2006/vcard/ns#hasEmail> "cuzk.helpdesk@cuzk.cz" .
+
+  <https://data.gov.cz/zdroj/ovm/00025712> a <http://xmlns.com/foaf/0.1/Agent>;
+    <http://xmlns.com/foaf/0.1/name> "Český úřad zeměměřický a katastrální"@cs .
+
+  <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/distribuce/c605017d3bde7487d26f39497f8378e1>
+    a <http://www.w3.org/ns/dcat#Distribution>;
+    <https://data.gov.cz/slovník/nkod/typ-úložiště-datové-sady/typÚložiště> <https://data.gov.cz/slovník/nkod/typ-úložiště-datové-sady/Web>;
+    <http://purl.org/dc/terms/title> "Mapa geometrických plánů pro katastrální území: Částkov u Tachova [618560]"@cs;
+    <http://purl.org/dc/terms/description> "Mapa geometrických plánů pro katastrální území: Částkov u Tachova [618560]"@cs;
+    <http://www.w3.org/ns/dcat#accessURL> <http://services.cuzk.cz/vfk-gmpl/ku/aktualni/618560.zip>;
+    <http://www.w3.org/ns/dcat#downloadURL> <http://services.cuzk.cz/vfk-gmpl/ku/aktualni/618560.zip>;
+    <https://data.gov.cz/slovník/nkod/mediaType> "text/vfk";
+    <https://data.gov.cz/slovník/podmínky-užití/specifikace> <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/distribuce/c605017d3bde7487d26f39497f8378e1/podmínky-užití> .
+
+  <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/distribuce/c605017d3bde7487d26f39497f8378e1/podmínky-užití>
+    a <https://data.gov.cz/slovník/podmínky-užití/Specifikace>;
+    <https://data.gov.cz/slovník/podmínky-užití/autorské-dílo> <https://www.cuzk.cz/Predpisy/Podminky-poskytovani-prostor-dat-a-sitovych-sluzeb/Podminky-poskytovani-prostorovych-dat-CUZK.aspx>;
+    <https://data.gov.cz/slovník/podmínky-užití/databáze-jako-autorské-dílo> <https://www.cuzk.cz/Predpisy/Podminky-poskytovani-prostor-dat-a-sitovych-sluzeb/Podminky-poskytovani-prostorovych-dat-CUZK.aspx>;
+    <https://data.gov.cz/slovník/podmínky-užití/databáze-chráněná-zvláštními-právy> <https://www.cuzk.cz/Predpisy/Podminky-poskytovani-prostor-dat-a-sitovych-sluzeb/Podminky-poskytovani-prostorovych-dat-CUZK.aspx>;
+    <https://data.gov.cz/slovník/podmínky-užití/osobní-údaje> <https://data.gov.cz/podmínky-užití/není-specifikováno-zda-obsahuje-osobní-údaje/> .
+
+  <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560/záznam>
+    a <http://www.w3.org/ns/dcat#CatalogRecord>;
+    <http://xmlns.com/foaf/0.1/primaryTopic> <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560>;
+    <http://purl.org/dc/terms/language> <http://publications.europa.eu/resource/authority/language/CES>;
+    <http://purl.org/dc/terms/conformsTo> <https://joinup.ec.europa.eu/release/dcat-ap/12>;
+    <http://purl.org/dc/terms/source> <https://atom.cuzk.cz/api/3/action/package_show?id=cz-00025712-cuzk_gmpl-ku-vfk_618560> .
+
+  <https://data.gov.cz/zdroj/lokální-katalogy/CUZK/809025158> <http://www.w3.org/ns/dcat#dataset>
+      <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560> .
+
+  <https://data.gov.cz/zdroj/datové-sady/https---atom.cuzk.cz-api-3-action-package_show-id-cz-00025712-cuzk_gmpl-ku-vfk_618560>
+    <http://www.w3.org/ns/dcat#keyword> "hranice"@cs, "vektorová mapa"@cs, "informační systém katastru nemovitostí (ISKN)"@cs,
+      "nemovitost, nemovitá věc"@cs, "Katastrální parcely"@cs, "hranice parcely"@cs, "katastrální parcela"@cs,
+      "geometrický plán"@cs, "katastrální pracoviště"@cs;
+    a <https://data.gov.cz/slovník/nkod/typ-datové-sady-dle-zdroje/LKOD> .
+}

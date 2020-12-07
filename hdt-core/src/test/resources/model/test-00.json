@@ -1,0 +1,10 @@
+{
+    "rootSource": "root",
+    "propertySource": "root",
+    "sources": [],
+    "transformation": {
+        "type": "primitive",
+        "selectors": [],
+        "constant": "42" 
+    }
+}

@@ -1,0 +1,15 @@
+plugins {
+    id 'java'
+    id 'biz.aQute.bnd.builder'
+}
+
+java {
+    jar {
+        archiveAppendix.set('core')
+        bnd(
+                'Bundle-Name': 'Hierarchical Data Transformations Java Core',
+                'Bundle-SymbolicName': 'hdt-java-core',
+                '-exportcontents': 'cz.skodape.hdt.*'
+        )
+    }
+}

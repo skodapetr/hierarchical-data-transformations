@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+    id 'biz.aQute.bnd.builder'
+}
+
+java {
+    jar {
+        archiveAppendix.set('json')
+        bnd(
+                'Bundle-Name': 'Hierarchical Data Transformations Java JSON',
+                'Bundle-SymbolicName': 'hdt-java-json',
+                '-exportcontents': 'cz.skodape.hdt.json.*'
+        )
+        dependencies {
+            implementation project(':hdt-core')
+        }
+    }
+}

@@ -1,0 +1,6 @@
+rootProject.name = "hdt-java"
+
+include ":hdt-core",
+        ":hdt-json",
+        ":hdt-rdf",
+        ":hdt-cli"

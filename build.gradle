@@ -6,7 +6,7 @@ plugins {
 }
 
 allprojects {
-    version = '1.0.0'
+    version = '1.0.0-alpha.1'
 }
 
 subprojects {
@@ -20,18 +20,9 @@ subprojects {
         junit = '5.6.1'
         archunit = '0.13.1'
     }
-
     java {
         repositories {
             mavenCentral()
-            maven {
-                name = "GitHubPackages"
-                url = "https://maven.pkg.github.com/skodapetr/hierarchical-data-transformations-java"
-                credentials {
-                    username = System.getenv("GITHUB_ACTOR")
-                    password = System.getenv("GITHUB_TOKEN")
-                }
-            }
         }
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

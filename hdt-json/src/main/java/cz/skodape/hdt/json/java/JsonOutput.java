@@ -1,4 +1,4 @@
-package cz.skodape.hdt.json.jackson;
+package cz.skodape.hdt.json.java;
 
 import cz.skodape.hdt.core.OperationFailed;
 import cz.skodape.hdt.core.Output;
@@ -9,7 +9,7 @@ import java.io.Writer;
 import java.util.Locale;
 import java.util.Stack;
 
-public class JacksonOutput implements Output {
+public class JsonOutput implements Output {
 
     private static class State {
 
@@ -27,7 +27,7 @@ public class JacksonOutput implements Output {
 
     private StringBuilder prefix = new StringBuilder();
 
-    public JacksonOutput(Writer writer, boolean prettyPrint) {
+    public JsonOutput(Writer writer, boolean prettyPrint) {
         this.writer = writer;
         this.prettyPrint = prettyPrint;
     }
@@ -129,10 +129,10 @@ public class JacksonOutput implements Output {
         this.writeSeparator();
         this.writeIndentation();
         this.writeKey();
-        if (!(configuration instanceof JacksonOutputConfiguration)) {
+        if (!(configuration instanceof JsonOutputConfiguration)) {
             throw new IOException("Invalid configuration instance.");
         }
-        var jsonConfiguration = (JacksonOutputConfiguration) configuration;
+        var jsonConfiguration = (JsonOutputConfiguration) configuration;
         switch (jsonConfiguration.datatype) {
             case Boolean:
                 this.writeBoolean(value);

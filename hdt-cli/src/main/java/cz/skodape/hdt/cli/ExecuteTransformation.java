@@ -7,8 +7,8 @@ import cz.skodape.hdt.core.Output;
 import cz.skodape.hdt.core.PropertySource;
 import cz.skodape.hdt.core.SelectorContext;
 import cz.skodape.hdt.core.Transform;
-import cz.skodape.hdt.json.jackson.JacksonOutputAdapter;
 import cz.skodape.hdt.json.jackson.JacksonSourceAdapter;
+import cz.skodape.hdt.json.java.JsonOutputAdapter;
 import cz.skodape.hdt.model.TransformationFile;
 import cz.skodape.hdt.model.TransformationFileAdapter;
 import cz.skodape.hdt.rdf.rdf4j.Rdf4jSourceAdapter;
@@ -49,7 +49,7 @@ public class ExecuteTransformation {
         adapter.addAdapter(new PathSelectorAdapter());
         adapter.addAdapter(new OnceSelectorAdapter());
         //
-        adapter.addAdapter(new JacksonOutputAdapter());
+        adapter.addAdapter(new JsonOutputAdapter());
         adapter.addAdapter(new JacksonSourceAdapter());
         //
         adapter.addAdapter(new Rdf4jSourceAdapter());

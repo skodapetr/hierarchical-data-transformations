@@ -1,8 +1,8 @@
-package cz.skodape.hdt.json.jackson;
+package cz.skodape.hdt.json.java;
 
 import cz.skodape.hdt.model.OutputConfiguration;
 
-public class JacksonOutputConfiguration implements OutputConfiguration {
+public class JsonOutputConfiguration implements OutputConfiguration {
 
     public enum Type {
         String,
@@ -15,10 +15,10 @@ public class JacksonOutputConfiguration implements OutputConfiguration {
      */
     public Type datatype;
 
-    public JacksonOutputConfiguration() {
+    public JsonOutputConfiguration() {
     }
 
-    public JacksonOutputConfiguration(Type datatype) {
+    public JsonOutputConfiguration(Type datatype) {
         this.datatype = datatype;
     }
 

@@ -169,6 +169,9 @@ public class Transform {
             PrimitiveTransformation definition, ReferenceSource source)
             throws OperationFailed, IOException {
         String value = getValueForPrimitive(definition, source);
+        if (value == null) {
+            return;
+        }
         output.writeValue(definition.outputConfiguration, value);
     }
 

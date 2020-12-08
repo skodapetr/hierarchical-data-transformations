@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'biz.aQute.bnd.builder'
     id 'maven-publish'
 }
@@ -37,6 +37,7 @@ java {
         }
         publications {
             mavenJava(MavenPublication) {
+                from components.java
             }
         }
     }

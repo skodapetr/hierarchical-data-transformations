@@ -6,7 +6,8 @@ plugins {
 }
 
 allprojects {
-    version = '1.0.0-alpha.1'
+    group 'cz.skodape.hdt'
+    version '1.0.0-alpha.2'
 }
 
 subprojects {
@@ -29,6 +30,7 @@ subprojects {
         jar {
             archiveBaseName.set('hdt')
         }
+        withSourcesJar()
         dependencies {
             implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.28'
             implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.0'

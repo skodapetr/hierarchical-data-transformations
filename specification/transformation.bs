@@ -1,0 +1,708 @@
+<pre class='metadata'>
+Title: Hierarchical Data Transformations
+Shortname: HDT
+Boilerplate: conformance no, copyright no
+Repository: https://github.com/skodapetr/hierarchical-data-transformations
+Markup Shorthands: markdown yes
+Level: 1
+Status: LD
+URL: https://skodapetr.github.io/hierarchical-data-transformations/specification/
+Editor: Petr Škoda,
+Abstract: This specification describes the transformation model and functionality.
+</pre>
+
+<!-- https://tabatkins.github.io/bikeshed/ -->
+
+Concepts {#concepts}
+====================
+The basic idea compose of three components: source, transformation, and target.
+Source provide data for transformation.
+Transformation is takes a transformation template and combine it with data from source.
+The output produced by transformation is fed to target, that converts it into a format of choice.
+
+Source {#concept-source}
+------------------------
+A source can be used to load *EntityReference* to entities and their properties *ValueReference*.
+*EntityReference* are fed into the transformation, based on the tranformation template.
+Properties are often read to perform certain action on source, like filtering, or to be send to target as primitive values.
+We can split sources into two categories *EntitySource* and *PropertySources*.
+
+### EntitySource ### {#concept-source-entity}
+The *EntitySource* source is an iterator that iterates over all resources in the source.
+In addition the source is capable to clone it self. 
+The original and clone can be independently iterater yet they muset return the same results.
+
+```Java
+interface EntitySource {
+
+  EntitySource split();
+
+  EntityReference next();
+
+}
+```
+
+### PropertySources ### {#concept-source-property}
+The *PropertySources* is capable of providing properties for given *Reference*.
+As this operation can be expensive the idea is to have general *PropertySources* and bind it to particular *Reference* as needed. 
+A property is always identified using a string key. 
+The *PropertySources* allow user not only to read *Reference* properties, but also read properties where the *Reference* is an object. 
+The later allow to navigate in reverse to property relation. 
+
+The exact properties that can be read from the source are source specific.
+JSON, RDF or XML source can provide format specific properties.
+This may include information about array position, access to data types or attributes.
+
+Implementation of *PropertySource* may consiste of several classes.
+```Java
+interface PropertySource {
+
+  ArrayReference property(EntityReference reference, String property);
+
+  ArrayReference reverseProperty(Reference reference, String property);
+
+  ReferenceSource<Reference> source(ArrayReference reference);
+
+}
+```
+As every combination of entity and proeprty can have multiple values, we always return array.
+Yet we need a way how to iterate this array, that is handled by the third method.
+The *ReferenceSource* can be implementation of following interface:
+```Java
+interface ReferenceSource {
+
+  Reference next();
+
+}
+```
+
+Transformation {#concept-transformation}
+----------------------------------------
+Transformation serves as a template for producing output.
+The template can contain constant data that are just copied to the output.
+In addition the template can contain *select* and *navigation* that are used to select data from sources.
+
+Template source interaction depends on each template type.
+A source can provide 0...n entries.
+A template may consume one or mode entries.
+Most templates, besides array, consume obly the first entry ignoring all others.
+For array template all entries are iterated and an array item is generated for each of them.
+
+Target {#concept-target}
+------------------------
+Target consumes an output of a transformation in a way of events, similar to SAX for XML.
+The events indicate opening/closing of object/arrays, primitiva values, or keys.
+A general target would save this structure as JSON exactly as given. 
+Yet some targets may interpret this structure to produce other formats like RDR, XML, or CSV.
+
+Target interface should include following methods:
+```Java
+interface Output {
+
+  void openNewArray();
+
+  void closeLastArray();
+
+  void openNewObject();
+
+  void closeLastObject();
+
+  void setNextKey(String key);
+
+  void writeValue(String value, String type);
+
+}
+```
+
+Configuration {#configuration}
+==============================
+The root of transformation configuration contain entries with following keys:
+
+: schema
+:: A string that points to JSON schema specification of the transformation serialization.
+    In addition it is also used to determine the version.
+: transformation
+:: Description of the transformation.
+: sources
+:: Optional section.
+    For a given identifier, key, provides a source configuration.
+: target
+:: Optional section.
+    You can specify target that is used to consume the data.
+: templates
+:: Optional section.
+    Definitions from this section can be referenced from other sections or even this section.
+    The objective is to extract named common structres in one place and simplify transofmration definition.
+
+With all sections included the transfomration definition in JSON may look like this:
+```json
+{
+  "schema": "...",
+  "transformation": {},
+  "sources": {},
+  "target": {},
+  "templates": {}
+}
+```
+Each section, besides schema, is discussed in following sections.
+
+Transformation {#configuration-transformation}
+----------------------------------------------
+When transforming data user can specify output data template using JSON. 
+The template can contain constant content as illustrated in following example:
+```json
+{
+  "kind": "object",
+  "properties": {
+    "key": {
+      "type": "const",
+      "value": ["value"]
+    }
+  }
+}
+```
+In the example the output is always the same as there is no use of sources.
+```json
+{
+  "key": ["value"]
+}
+```
+
+There are several building blocks / kinds available:
+: object 
+:: Represent an object with properties, under given keys in *properties* property.
+: array
+:: Represent an array with items as specified in *items* property.
+: primitive
+:: Represent a primitive typed value.    
+    Type of the value is specified using *type* key.
+    The value is specified using *value* key.
+Every kind is descibed in the [objects kinds section](#transformation-kinds).
+
+Each kind can contain additional properties:
+: source
+:: Select active [source](#concept-source).
+: navigate
+:: Perform navigate/filtering operations on an active source.
+    Multiple operations can be set using an array.
+    Navigation syntax is described in [navigate section](#configuration-navigate).
+
+Sources {#configuration-sources} 
+--------------------------------
+In this optional section user can predefined sources used in the transformation.
+Every source definition is stored using an uniq identifier.
+
+In the following example two JSON data sources are defined. 
+The first data source is also marked to be root source and is thus used as an entity source.
+Each source should contain *configuration* object that is specific particular source type.
+```json
+{
+  "sources": {
+    "main": {
+      "kind": "json",
+      "configuration": {
+        "file": "./data.json"
+      }
+    },
+    "codelist": {
+      "kind": "json",
+      "configuration": {
+        "file": "./codelist.json",
+        "path": "data.codelist"
+      }
+    }
+  }
+}
+```
+The *configuration* is a flat map with string keys and string values.
+
+Target {#configuration-target}
+------------------------------
+A default target can be part of the configuration. 
+Similar to source target can have type specific configuration.
+Unlike sources there can be only one target.
+
+In the following example a target writing to JSON file is created.
+```json
+{
+  "target": {
+    "kind": "json",
+    "configuration": {
+      "file": "./output.json"
+    }
+  }
+}
+```
+The *configuration* is a flat map with string keys and string values.
+
+Templates {#configuration-templates}
+------------------------------------
+The tranformation can contain many repetitive parts.
+To adress this issue it is possible to extract fragments of the configuration into templates section.
+In this object templates are defined for unique keys.
+Each template can also contain list of arguments that user can provide when using the template.
+
+
+Transforamtion kinds {#transformation-kinds}
+============================================
+This section describe object kinds that can be used in the transormation template.
+
+Kind: object {#kind-object}
+---------------------------
+Represent an object with given keys and values.
+Keys and values are set using *properties* property.
+
+In adition entries with dynamic keys can be defined using *dynamicProperties*.
+This property is specified as array or entries. 
+Each entry contains *value* and *key*. 
+The *key* must be [primitive kind](#kind-primitive).
+
+```Java 
+interface KindObject {
+
+    String source;
+
+    List<Navigation> navigation;
+
+    // KindObject, KindArray, KindPrimitive
+    Map<String, Kind> properties;
+
+    // KindObject, KindArray, KindPrimitive
+    Map<KindPrimitive, Kind> dynamicProperties;
+
+}
+```
+
+Kind: array {#kind-array}
+-------------------------
+Represent an array.
+Array items are provided using *items* property.
+
+```Java 
+interface KindPrimitive {
+
+    String source;
+
+    List<Navigation> navigation;
+
+    // KindObject, KindArray, KindPrimitive
+    List<Kind> items;
+
+}
+```
+
+Kind: primitive {#kind-primitive}
+---------------------------------
+Produce a primitive value of type.
+Type is specified using *type* property.
+Value is defined by *value* property.
+Multiple values can be provided, yet only the first non-empty one is used.
+
+The *value* property can host *const* or *select* kind of objects.
+
+Bellow is an example of a *primitive* kind definition:
+```json
+[{
+  "kind": "primitive",
+  "type": "string",
+  "value": [{
+    "kind": "const",
+    "const": "content"
+  }]
+}, {
+  "kind": "primitive",
+  "type": "string",
+  "value": [{
+    "kind": "select",
+    "path": [
+      {"@value": "data"}, 
+      {"@value": "value"}
+    ]
+  }]
+}]
+```
+
+As demosntrated in the example abowe, value of a primitive kind can be determind using [const](#kind-const) or [select](#kind-select) kind.
+
+```Java 
+interface KindPrimitive {
+
+    String source;
+
+    List<Navigation> navigation;
+
+    String type;
+
+    // KindConst or KindSelect
+    Value value;
+
+}
+```
+
+Kind: const {#kind-const}
+----------------------------
+Represent a constant value, stored under *const* key.
+Values is propagated to output exactly as provided.
+
+```Java
+interface KindConst {
+
+  String value;
+
+}
+```
+
+Kind: select {#kind-select}
+---------------------------
+Similar to [kind const](#kind-const), yet value is determined by selection.
+The selection is similar to [navigation](#configuration-navigate) as it works with the source.
+Yet instead of changing the active source, it only retrieves available values.
+Every selection must have *path* property that specifies navigation in the source.
+
+When path is an empty array, it is considered to be identity selector.
+
+```Java
+interface KindSelect {
+
+  List<PathItem> path;
+
+}
+```
+
+Syntactic sugar {#syntactic-sugar}
+==================================
+As the transformation definition is quite verbose there are ways to make it shorter.
+* As each kind has uniq properties, the kind declaration can be left out.
+* Every array can be replaced with single value. 
+    Such value is then interpreted as an array with a single value.
+* A *path* array objects can be replaced with *value* part only.
+
+As a result an example from [kind primitive](#kind-primitive) can be simplified to:
+```json
+[{
+  "type": "string",
+  "const": "content"
+}, {
+  "type": "string",
+  "path": ["data", "value"]
+}]
+```
+
+Navigation {#configuration-navigate}
+====================================
+Navigation steps can be invoked using *navigation* keyword and is evaluated before processing of the parent object.
+Result of navigation is change of state of the source by aaplication of nevagitaonal operations.
+A part of every navigation is *path*.
+
+Path is a sequence of properties that is used to navigate the source.
+A path consists of individual steps, with full definition:
+```Java
+interface PathItem {
+  
+  String value;
+
+  boolean reverse;
+
+}
+```
+When *reverse* is false this can be replaced only with the predicate, a string.
+
+Navigation is implemented using set of navigation kinds.
+
+Kind: path {#kind-path}
+-----------------------------
+The simplest for of navigation is to navigate along predefined [path](#path). 
+
+```Java
+interface KindPath {
+
+  List<PathItem> path;
+
+}
+```
+
+Kind: contains {#kind-contain}
+-------------------------------------------
+Resolve given *path* to get value list.
+The value list must be non-empty and contain given *value*.
+
+```Java
+interface KindContains {
+
+  List<PathItem> path;
+
+  String value;
+
+}
+```
+
+Kind: equal {#kind-equal}
+--------------------------------------
+Resolve given *path* to get value list.
+The value list must be of size one and contain only given *value*.
+
+```Java
+interface KindEqual {
+
+  List<PathItem> path;
+
+  String value;
+
+}
+```
+
+Examples {#examples}
+====================
+This section contain semi-random selection of examples that demonstrate particular features.
+
+Constant output {#constant-output}
+----------------------------------
+It is possible to generate output without any source specified.
+
+```json
+{
+  "transformation": {
+    "kind": "object",
+    "properties": {
+      "name": {
+        "kind": "primitive",
+        "type": "string",
+        "value": [{
+          "const": "milk"
+        }]
+      },
+      "codes": {
+        "items": [{
+          "type": "string",
+          "value": [{
+            "const": "34FA"
+          }]
+        }, {
+          "type": "string",
+          "value": [{
+            "const": "EA12C"
+          }]
+        }]
+      },
+      "price": {
+        "type": "number",
+        "value": [{
+          "const": "12"
+        }]
+      }
+    }
+  }
+}
+```
+Same can be defined using shorter version:
+```json
+{
+  "transformation": {
+    "properties": {
+      "name": {
+        "type": "string",
+        "const": "milk"
+      },
+      "codes": {
+        "items": [{
+          "type": "string",
+          "const": "34FA"
+        }, {
+          "type": "string",
+          "const": "EA12C"
+        }]
+      },
+      "price": {
+        "type": "number",
+        "const": "12"
+      }
+    }
+  }
+}
+```
+
+Should produce JSON output:
+```json
+{
+  "name": "milk",
+  "codes": ["34FA", "EA12C"],
+  "price": 12
+}
+```
+
+Using sources {#using-sources}
+------------------------------
+Besides generating static content we can employ sources to select data from other sources.
+Source definition does not mean source iteration. 
+In the example bellow the source is iterated multiple times.
+Reason fot that is, that every time a source is passed down to a child object a copy of the source is created.
+```json
+{
+  "source": "main",
+  "kind": "object",
+  "properties": {
+    "products": {
+      "kind": "array",
+      "navigate": {
+        "kind": "contains",
+        "contains": "http://localhost/Product",
+        "path": [
+          {"value": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},
+          {"value": "@value"}
+        ]
+      },
+      "items": {
+        "kind": "primitive",
+        "type": "string",
+        "value": [{
+          "kind": "select",
+          "select": {
+            "path": [
+              {"value": "http://localhost/label"},
+              {"value": "@value"}
+            ]
+          }
+        }]
+      }
+    },
+    "users": {
+      "kind": "array",
+      "navigate": {
+        "kind": "contains",
+        "contains": "http://localhost/User",
+        "path": [
+          {"value": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"},
+          {"value": "@value"}
+        ]
+      },
+      "items": {
+        "kind": "primitive",
+        "type": "string",
+        "value": [{
+          "kind": "select",
+          "select": {
+            "path": [
+              {"value": "http://localhost/label"},
+              {"value": "@value"}
+            ]
+          }
+        }, {
+          "kind": "const",
+          "const": "unknown"
+        }]
+      }
+    }
+  }
+}
+```
+We can see use of the *navigation* keyword that selection/filtering over defined source.
+In this case the source could be defined in the *products* and *users* objects, the produced output would be the same.
+As the *select* value is an array, it is possible to apply multiple selectors.
+
+Same transformation definition can be written using shorted syntax:
+```json
+{
+  "source": "main",
+  "properties": {
+    "products": {
+      "navigate": {
+        "contains": "http://localhost/Product",
+        "path": [
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "@value"
+        ]
+      },
+      "items": {
+        "type": "string",
+        "path": [
+          "http://localhost/label",
+          "@value"
+        ]
+      }
+    },
+    "users": {
+      "navigate": {
+        "contains": "http://localhost/User",
+        "path": [
+          "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+          "@value"
+        ]
+      },
+      "items": {
+        "type": "string",
+        "value": [{
+          "path": [
+            {"value": "http://localhost/label"},
+            {"value": "@value"}
+          ]
+        }, {
+          "const": "unknown"
+        }]
+      }
+    }
+  }
+}
+```
+
+With following RDF input:
+```Turtle
+<http://localhost/000> a <http://localhost/User> ;
+    <http://localhost/label> "user" .
+
+<http://localhost/001> a <http://localhost/Product> ;
+    <http://localhost/label> "001" .
+
+<http://localhost/002> a <http://localhost/Product> ;
+    <http://localhost/label> "002", "Second" .
+
+<http://localhost/003> a <http://localhost/Product> ;
+    <http://localhost/label> "003" .
+
+<http://localhost/004> a <http://localhost/User> .
+
+```
+
+May produce following output:
+```json
+{
+ "products": ["001", "002", "003"],
+ "users": ["user", "unknown"] 
+}
+```
+
+The precise output depends on the implementation of the RDF source.
+While RDF does not provide inherit ordering, the source may use ordering defined by the source file.
+
+Selecting array {#using-array}
+------------------------------
+While selecting single values is simple, workin with arrays may be a little tricky.
+The example bellow demonstrates how to work with arrays for RDF sources.
+In this example we use only the short form:
+```json
+{
+  "source": "main",
+  "items": [{
+    "properties": {
+      "label": {
+        "navigation": {
+          "path": ["http://localhost/label"]
+        },
+        "items": [{
+          "type": "string",
+          "path": "@value"
+        }]
+      }
+    }
+  }]
+}
+```
+
+With input:
+```Turtle
+<http://localhost/002> <http://localhost/label> "002", "Second" .
+```
+
+Would produce output:
+```json
+[{"label": ["002", "Second"]}]
+```

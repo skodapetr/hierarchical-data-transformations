@@ -3,3 +3,4 @@ dist/
 bin/
 build/
 data/
+node_modules/

@@ -1,10 +1,10 @@
 package cz.skodape.hdt.rdf.rdf4j;
 
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.PrimitiveReference;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
-import cz.skodape.hdt.core.Selector;
+import cz.skodape.hdt.core.reference.PrimitiveReference;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
+import cz.skodape.hdt.core.selector.Selector;
 import cz.skodape.hdt.core.SelectorContext;
 import cz.skodape.hdt.selector.filter.FilterSelectorConfiguration;
 import cz.skodape.hdt.selector.path.PathSelectorConfiguration;
@@ -48,7 +48,7 @@ public class Rdf4jMemoryTripleSourceTest {
         Assertions.assertEquals(1, filtered.size());
     }
 
-    protected List<Reference> collect(ReferenceSource source)
+    protected List<Reference> collect(EntitySource source)
             throws OperationFailed {
         ArrayList<Reference> result = new ArrayList<>();
         Reference next;

@@ -1,12 +1,12 @@
 package cz.skodape.hdt.rdf.rdf4j;
 
-import cz.skodape.hdt.core.ArrayReference;
+import cz.skodape.hdt.core.reference.ArrayReference;
 import cz.skodape.hdt.core.MemoryReferenceSource;
-import cz.skodape.hdt.core.ObjectReference;
+import cz.skodape.hdt.core.reference.EntityReference;
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.PropertySource;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
+import cz.skodape.hdt.core.source.PropertySource;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
 import cz.skodape.hdt.rdf.rdf4j.model.Rdf4jArray;
 import cz.skodape.hdt.rdf.rdf4j.model.Rdf4jLiteral;
 import cz.skodape.hdt.rdf.rdf4j.model.Rdf4jPrimitive;
@@ -66,7 +66,7 @@ public abstract class Rdf4jSource implements PropertySource {
     }
 
     @Override
-    public ReferenceSource source(Reference reference)
+    public EntitySource source(Reference reference)
             throws OperationFailed {
         List<Reference> result = new ArrayList<>();
         Rdf4jReference rdfReference = asRdfReference(reference);
@@ -93,7 +93,7 @@ public abstract class Rdf4jSource implements PropertySource {
     }
 
     @Override
-    public ArrayReference property(ObjectReference reference, String property)
+    public ArrayReference property(EntityReference reference, String property)
             throws OperationFailed {
         Rdf4jReference rdfReference = asRdfReference(reference);
         if (rdfReference instanceof Rdf4jResource) {

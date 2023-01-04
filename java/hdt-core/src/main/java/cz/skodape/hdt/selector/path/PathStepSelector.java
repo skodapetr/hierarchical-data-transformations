@@ -1,33 +1,33 @@
 package cz.skodape.hdt.selector.path;
 
-import cz.skodape.hdt.core.ArrayReference;
-import cz.skodape.hdt.core.ObjectReference;
+import cz.skodape.hdt.core.reference.ArrayReference;
+import cz.skodape.hdt.core.reference.EntityReference;
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.PropertySource;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
+import cz.skodape.hdt.core.source.PropertySource;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
 
-class PathStepSelector implements ReferenceSource {
+class PathStepSelector implements EntitySource {
 
     private final PropertySource propertySource;
 
     private final PathSelectorConfiguration.Path step;
 
-    private final ReferenceSource inputSource;
+    private final EntitySource inputSource;
 
-    private ReferenceSource nextSource = null;
+    private EntitySource nextSource = null;
 
     public PathStepSelector(
             PropertySource propertySource,
             PathSelectorConfiguration.Path step,
-            ReferenceSource inputSource) {
+            EntitySource inputSource) {
         this.propertySource = propertySource;
         this.step = step;
         this.inputSource = inputSource;
     }
 
     @Override
-    public ReferenceSource split() throws OperationFailed {
+    public EntitySource split() throws OperationFailed {
         PathStepSelector result = new PathStepSelector(
                 propertySource, step, inputSource.split());
         if (nextSource != null) {
@@ -54,7 +54,7 @@ class PathStepSelector implements ReferenceSource {
             if (!next.isObjectReference()) {
                 continue;
             }
-            ObjectReference objectReference = (ObjectReference) next;
+            EntityReference objectReference = (EntityReference) next;
             ArrayReference arrayReference;
             if (step.reverse) {
                 arrayReference = propertySource.reverseProperty(

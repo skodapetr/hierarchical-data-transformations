@@ -27,7 +27,7 @@ public class JacksonOutputTest {
     public void writePrimitives() throws IOException {
         Writer writer = new StringWriter();
         JsonOutput output = new JsonOutput(writer, false);
-        output.openNextObject();
+        output.openNewObject();
         output.setNextKey("key");
         output.writeValue(STRING, "value");
         output.setNextKey("1");
@@ -43,7 +43,7 @@ public class JacksonOutputTest {
     public void booleanConversion() throws IOException {
         Writer writer = new StringWriter();
         JsonOutput output = new JsonOutput(writer, false);
-        output.openNextArray();
+        output.openNewArray();
         output.writeValue(BOOLEAN, "1");
         output.writeValue(BOOLEAN, "true");
         output.writeValue(BOOLEAN, "True");
@@ -60,7 +60,7 @@ public class JacksonOutputTest {
     public void sanitizeString() throws IOException {
         Writer writer = new StringWriter();
         JsonOutput output = new JsonOutput(writer, false);
-        output.openNextArray();
+        output.openNewArray();
         output.writeValue(STRING, "start\r\nend");
         output.writeValue(STRING, "start\t\"end");
         output.closeLastArray();
@@ -72,7 +72,7 @@ public class JacksonOutputTest {
     public void numberConversion() throws IOException {
         Writer writer = new StringWriter();
         JsonOutput output = new JsonOutput(writer, false);
-        output.openNextArray();
+        output.openNewArray();
         output.writeValue(NUMBER, "1");
         output.writeValue(NUMBER, "1.1");
         output.writeValue(NUMBER, "1,1");

@@ -1,7 +1,7 @@
 package cz.skodape.hdt.json.jackson.model;
 
 import com.fasterxml.jackson.databind.node.ValueNode;
-import cz.skodape.hdt.core.ObjectReference;
+import cz.skodape.hdt.core.reference.EntityReference;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * That is why this is an object.
  */
 public class JacksonValueWrap
-        extends JacksonReference implements ObjectReference {
+        extends JacksonReference implements EntityReference {
 
     private final ValueNode node;
 

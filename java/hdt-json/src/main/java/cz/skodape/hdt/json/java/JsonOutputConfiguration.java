@@ -1,8 +1,8 @@
 package cz.skodape.hdt.json.java;
 
-import cz.skodape.hdt.model.OutputConfiguration;
+import cz.skodape.hdt.model.TransformationTarget;
 
-public class JsonOutputConfiguration implements OutputConfiguration {
+public class JsonOutputConfiguration implements TransformationTarget {
 
     public enum Type {
         String,

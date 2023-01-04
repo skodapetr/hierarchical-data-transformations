@@ -1,7 +1,7 @@
 package cz.skodape.hdt.json.jackson.model;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cz.skodape.hdt.core.ArrayReference;
+import cz.skodape.hdt.core.reference.ArrayReference;
 
 import java.util.Collections;
 import java.util.List;

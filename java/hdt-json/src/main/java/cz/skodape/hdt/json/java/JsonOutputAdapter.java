@@ -1,8 +1,8 @@
 package cz.skodape.hdt.json.java;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import cz.skodape.hdt.model.OutputConfiguration;
-import cz.skodape.hdt.model.TransformationFileAdapter;
+import cz.skodape.hdt.model.TransformationTarget;
+import cz.skodape.hdt.model.adapter.TransformationFileAdapter;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ public class JsonOutputAdapter
         implements TransformationFileAdapter.OutputConfigurationAdapter {
 
     @Override
-    public OutputConfiguration readJson(JsonNode root) throws IOException {
+    public TransformationTarget readJson(JsonNode root) throws IOException {
         if (!root.has("type")) {
             return null;
         }

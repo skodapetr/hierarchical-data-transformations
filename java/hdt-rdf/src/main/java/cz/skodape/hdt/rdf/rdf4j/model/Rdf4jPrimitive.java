@@ -1,6 +1,6 @@
 package cz.skodape.hdt.rdf.rdf4j.model;
 
-import cz.skodape.hdt.core.PrimitiveReference;
+import cz.skodape.hdt.core.reference.PrimitiveReference;
 import org.eclipse.rdf4j.model.Resource;
 
 /**

@@ -2,7 +2,7 @@ package cz.skodape.hdt.selector.identity;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import cz.skodape.hdt.model.SelectorConfiguration;
-import cz.skodape.hdt.model.TransformationFileAdapter;
+import cz.skodape.hdt.model.adapter.TransformationFileAdapter;
 
 public class IdentitySelectorAdapter
         implements TransformationFileAdapter.SelectorConfigurationAdapter {

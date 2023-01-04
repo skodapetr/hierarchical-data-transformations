@@ -1,8 +1,8 @@
 package cz.skodape.hdt.rdf.rdf4j;
 
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Resource;
 import org.eclipse.rdf4j.model.Statement;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * i.e. only data from a single graph are loaded at a time.
  */
 public class Rdf4jChunkedSource
-        extends Rdf4jSource implements ReferenceSource {
+        extends Rdf4jSource implements EntitySource {
 
     private static class State {
 
@@ -85,7 +85,7 @@ public class Rdf4jChunkedSource
     }
 
     @Override
-    public ReferenceSource roots() {
+    public EntitySource roots() {
         return this;
     }
 
@@ -114,7 +114,7 @@ public class Rdf4jChunkedSource
     }
 
     @Override
-    public ReferenceSource split() throws OperationFailed {
+    public EntitySource split() throws OperationFailed {
         throw new OperationFailed("Can't split root iterator.");
     }
 

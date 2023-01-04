@@ -1,7 +1,7 @@
 package cz.skodape.hdt.rdf.rdf4j.model;
 
-import cz.skodape.hdt.core.ArrayReference;
-import cz.skodape.hdt.core.Reference;
+import cz.skodape.hdt.core.reference.ArrayReference;
+import cz.skodape.hdt.core.reference.Reference;
 import org.eclipse.rdf4j.model.Resource;
 
 import java.util.Collections;

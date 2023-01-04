@@ -1,6 +1,6 @@
 package cz.skodape.hdt.selector.filter;
 
-import cz.skodape.hdt.core.Selector;
+import cz.skodape.hdt.core.selector.Selector;
 import cz.skodape.hdt.model.SelectorConfiguration;
 import cz.skodape.hdt.selector.path.PathSelectorConfiguration;
 

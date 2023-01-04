@@ -1,6 +1,6 @@
 package cz.skodape.hdt.selector.path;
 
-import cz.skodape.hdt.core.Selector;
+import cz.skodape.hdt.core.selector.Selector;
 import cz.skodape.hdt.model.SelectorConfiguration;
 
 import java.util.ArrayList;

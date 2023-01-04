@@ -1,14 +1,14 @@
 package cz.skodape.hdt.json.jackson.model;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import cz.skodape.hdt.core.ObjectReference;
+import cz.skodape.hdt.core.reference.EntityReference;
 
 import java.util.List;
 
 /**
  * Represent a JSON object.
  */
-public class JacksonObject extends JacksonReference implements ObjectReference {
+public class JacksonObject extends JacksonReference implements EntityReference {
     
     private final ObjectNode node;
 

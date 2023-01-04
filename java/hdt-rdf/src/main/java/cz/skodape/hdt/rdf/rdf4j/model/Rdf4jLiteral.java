@@ -1,10 +1,10 @@
 package cz.skodape.hdt.rdf.rdf4j.model;
 
-import cz.skodape.hdt.core.ObjectReference;
+import cz.skodape.hdt.core.reference.EntityReference;
 import org.eclipse.rdf4j.model.Literal;
 import org.eclipse.rdf4j.model.Resource;
 
-public class Rdf4jLiteral implements Rdf4jReference, ObjectReference {
+public class Rdf4jLiteral implements Rdf4jReference, EntityReference {
 
     private final Resource graph;
 

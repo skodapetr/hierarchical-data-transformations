@@ -1,8 +1,8 @@
 package cz.skodape.hdt.json.java;
 
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.Output;
-import cz.skodape.hdt.model.OutputConfiguration;
+import cz.skodape.hdt.core.output.Output;
+import cz.skodape.hdt.model.TransformationTarget;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -33,7 +33,7 @@ public class JsonOutput implements Output {
     }
 
     @Override
-    public void openNextArray() throws IOException {
+    public void openNewArray() throws IOException {
         this.writeSeparator();
         this.writeIndentation();
         this.writeKey();
@@ -97,7 +97,7 @@ public class JsonOutput implements Output {
     }
 
     @Override
-    public void openNextObject() throws IOException {
+    public void openNewObject() throws IOException {
         this.writeSeparator();
         this.writeIndentation();
         this.writeKey();
@@ -124,7 +124,7 @@ public class JsonOutput implements Output {
     }
 
     @Override
-    public void writeValue(OutputConfiguration configuration, String value)
+    public void writeValue(TransformationTarget configuration, String value)
             throws IOException {
         this.writeSeparator();
         this.writeIndentation();

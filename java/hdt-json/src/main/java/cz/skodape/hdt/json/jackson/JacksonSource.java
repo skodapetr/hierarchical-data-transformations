@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ValueNode;
-import cz.skodape.hdt.core.ArrayReference;
+import cz.skodape.hdt.core.reference.ArrayReference;
 import cz.skodape.hdt.core.MemoryReferenceSource;
-import cz.skodape.hdt.core.ObjectReference;
+import cz.skodape.hdt.core.reference.EntityReference;
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.PropertySource;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
+import cz.skodape.hdt.core.source.PropertySource;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
 import cz.skodape.hdt.json.jackson.model.JacksonArray;
 import cz.skodape.hdt.json.jackson.model.JacksonNodeArray;
 import cz.skodape.hdt.json.jackson.model.JacksonObject;
@@ -103,12 +103,12 @@ public class JacksonSource implements PropertySource {
     }
 
     @Override
-    public ReferenceSource roots() {
+    public EntitySource roots() {
         return new MemoryReferenceSource<>(this.roots);
     }
 
     @Override
-    public ReferenceSource source(Reference reference) throws OperationFailed {
+    public EntitySource source(Reference reference) throws OperationFailed {
         return new MemoryReferenceSource<>(sourceAsArray(reference));
     }
 
@@ -153,7 +153,7 @@ public class JacksonSource implements PropertySource {
     }
 
     @Override
-    public ArrayReference property(ObjectReference reference, String property)
+    public ArrayReference property(EntityReference reference, String property)
             throws OperationFailed {
         if (reference instanceof JacksonObject) {
             JacksonObject objectReference =

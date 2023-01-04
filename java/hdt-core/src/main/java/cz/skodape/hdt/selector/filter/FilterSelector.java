@@ -1,18 +1,18 @@
 package cz.skodape.hdt.selector.filter;
 
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.PrimitiveReference;
-import cz.skodape.hdt.core.PropertySource;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
-import cz.skodape.hdt.core.Selector;
+import cz.skodape.hdt.core.reference.PrimitiveReference;
+import cz.skodape.hdt.core.source.PropertySource;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
+import cz.skodape.hdt.core.selector.Selector;
 import cz.skodape.hdt.core.SelectorContext;
 
 public class FilterSelector implements Selector {
 
     private final FilterSelectorConfiguration configuration;
 
-    private ReferenceSource input;
+    private EntitySource input;
 
     private PropertySource propertySource;
 
@@ -23,14 +23,14 @@ public class FilterSelector implements Selector {
     }
 
     @Override
-    public void initialize(SelectorContext context, ReferenceSource input) {
+    public void initialize(SelectorContext context, EntitySource input) {
         this.input = input;
         this.propertySource = context.defaultSource;
         this.context = context;
     }
 
     @Override
-    public ReferenceSource split() throws OperationFailed {
+    public EntitySource split() throws OperationFailed {
         FilterSelector result = new FilterSelector(configuration);
         result.input = input.split();
         result.propertySource = propertySource;
@@ -65,7 +65,7 @@ public class FilterSelector implements Selector {
         }
     }
 
-    private boolean evaluateContain(ReferenceSource source)
+    private boolean evaluateContain(EntitySource source)
             throws OperationFailed {
         Reference next;
         while ((next = source.next()) != null) {
@@ -82,7 +82,7 @@ public class FilterSelector implements Selector {
         return false;
     }
 
-    private boolean evaluateEqual(ReferenceSource source)
+    private boolean evaluateEqual(EntitySource source)
             throws OperationFailed {
         Reference first = source.next();
         if (first == null) {

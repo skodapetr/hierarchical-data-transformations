@@ -1,16 +1,16 @@
 package cz.skodape.hdt.selector.path;
 
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
-import cz.skodape.hdt.core.Selector;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
+import cz.skodape.hdt.core.selector.Selector;
 import cz.skodape.hdt.core.SelectorContext;
 
 class PathSelector implements Selector {
 
     private final PathSelectorConfiguration configuration;
 
-    private ReferenceSource input;
+    private EntitySource input;
 
     public PathSelector(PathSelectorConfiguration configuration) {
         this.configuration = configuration;
@@ -18,7 +18,7 @@ class PathSelector implements Selector {
 
     @Override
     public void initialize(
-            SelectorContext context, ReferenceSource input)
+            SelectorContext context, EntitySource input)
             throws OperationFailed {
         this.input = input;
         for (PathSelectorConfiguration.Path step : this.configuration.path) {
@@ -28,7 +28,7 @@ class PathSelector implements Selector {
     }
 
     @Override
-    public ReferenceSource split() throws OperationFailed {
+    public EntitySource split() throws OperationFailed {
         PathSelector result = new PathSelector(this.configuration);
         result.input = this.input.split();
         return result;

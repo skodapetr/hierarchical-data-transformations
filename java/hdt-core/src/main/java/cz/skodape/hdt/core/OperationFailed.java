@@ -4,8 +4,6 @@ import org.slf4j.helpers.MessageFormatter;
 
 public class OperationFailed extends Exception {
 
-    private static final long serialVersionUID = 1L;
-
     protected final String message;
 
     protected final Object[] args;

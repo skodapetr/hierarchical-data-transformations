@@ -3,14 +3,14 @@ package cz.skodape.hdt.cli;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.Output;
-import cz.skodape.hdt.core.PropertySource;
+import cz.skodape.hdt.core.output.Output;
+import cz.skodape.hdt.core.source.PropertySource;
 import cz.skodape.hdt.core.SelectorContext;
-import cz.skodape.hdt.core.Transform;
+import cz.skodape.hdt.core.transformation.Transformation;
 import cz.skodape.hdt.json.jackson.JacksonSourceAdapter;
 import cz.skodape.hdt.json.java.JsonOutputAdapter;
 import cz.skodape.hdt.model.TransformationFile;
-import cz.skodape.hdt.model.TransformationFileAdapter;
+import cz.skodape.hdt.model.adapter.TransformationFileAdapter;
 import cz.skodape.hdt.rdf.rdf4j.Rdf4jSourceAdapter;
 import cz.skodape.hdt.selector.filter.FilterSelectorAdapter;
 import cz.skodape.hdt.selector.identity.IdentitySelectorAdapter;
@@ -37,7 +37,7 @@ public class ExecuteTransformation {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         SelectorContext context = createContext(definition);
-        (new Transform(definition, context, output)).apply();
+        (new Transformation(definition, context, output)).execute();
         LOG.info("Transformation finished.");
     }
 

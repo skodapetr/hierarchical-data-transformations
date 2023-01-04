@@ -1,9 +1,9 @@
 package cz.skodape.hdt.selector.once;
 
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
-import cz.skodape.hdt.core.Selector;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
+import cz.skodape.hdt.core.selector.Selector;
 import cz.skodape.hdt.core.SelectorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,17 +13,17 @@ public class OnceSelector implements Selector {
     private static final Logger LOG =
             LoggerFactory.getLogger(OnceSelector.class);
 
-    private ReferenceSource input = null;
+    private EntitySource input = null;
 
     private Reference returnedReference = null;
 
     @Override
-    public void initialize(SelectorContext context, ReferenceSource input) {
+    public void initialize(SelectorContext context, EntitySource input) {
         this.input = input;
     }
 
     @Override
-    public ReferenceSource split() {
+    public EntitySource split() {
         OnceSelector result = new OnceSelector();
         result.input = input;
         result.returnedReference = returnedReference;

@@ -1,6 +1,9 @@
 package cz.skodape.hdt.model;
 
 import cz.skodape.hdt.TestUtils;
+import cz.skodape.hdt.model.adapter.TransformationFileAdapter;
+import cz.skodape.hdt.model.transformation.BaseTransformation;
+import cz.skodape.hdt.model.transformation.KindPrimitive;
 import cz.skodape.hdt.selector.filter.FilterSelectorAdapter;
 import cz.skodape.hdt.selector.filter.FilterSelectorConfiguration;
 import cz.skodape.hdt.selector.identity.IdentitySelectorAdapter;
@@ -28,9 +31,9 @@ public class TransformationFileAdapterTest {
         BaseTransformation transformation = actual.transformation;
         Assertions.assertEquals(0, transformation.selectors.size());
         Assertions.assertTrue(
-                transformation instanceof PrimitiveTransformation);
-        PrimitiveTransformation primitive =
-                (PrimitiveTransformation) transformation;
+                transformation instanceof KindPrimitive);
+        KindPrimitive primitive =
+                (KindPrimitive) transformation;
         Assertions.assertEquals("42", primitive.constantValue);
     }
 

@@ -1,6 +1,7 @@
-package cz.skodape.hdt.core;
+package cz.skodape.hdt.core.output;
 
-import cz.skodape.hdt.model.OutputConfiguration;
+import cz.skodape.hdt.core.OperationFailed;
+import cz.skodape.hdt.model.TransformationTarget;
 
 import java.io.IOException;
 
@@ -9,14 +10,22 @@ import java.io.IOException;
  */
 public interface Output {
 
-    void openNextArray() throws IOException;
+    /**
+     * Open output for writing.
+     */
+    void open() throws OperationFailed;
+
+    void openNewArray() throws IOException;
 
     void closeLastArray() throws IOException;
 
-    void openNextObject() throws IOException;
+    void openNewObject() throws IOException;
 
     void closeLastObject() throws IOException;
 
+    /**
+     * Set value for writing next values.
+     */
     void setNextKey(String key) throws IOException;
 
     /**
@@ -25,7 +34,7 @@ public interface Output {
      * @param configuration Optional configuration object, can be null.
      * @param value         Value to output.
      */
-    void writeValue(OutputConfiguration configuration, String value)
+    void writeValue(TransformationTarget configuration, String value)
             throws IOException;
 
     /**
@@ -33,5 +42,10 @@ public interface Output {
      * content.
      */
     void onTransformationFinished() throws OperationFailed;
+
+    /**
+     * Close the output.
+     */
+    void close();
 
 }

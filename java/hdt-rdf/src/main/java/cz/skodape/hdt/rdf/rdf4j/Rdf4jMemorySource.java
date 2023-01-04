@@ -2,8 +2,8 @@ package cz.skodape.hdt.rdf.rdf4j;
 
 import cz.skodape.hdt.core.MemoryReferenceSource;
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
 import org.eclipse.rdf4j.model.IRI;
 import org.eclipse.rdf4j.model.Model;
 import org.eclipse.rdf4j.model.Resource;
@@ -58,7 +58,7 @@ public class Rdf4jMemorySource extends Rdf4jSource {
     }
 
     @Override
-    public ReferenceSource roots() {
+    public EntitySource roots() {
         Set<ResourceInGraph> subjects = new HashSet<>();
         model.stream().map(ResourceInGraph::new).forEach(subjects::add);
         List<Reference> references = subjects.stream()

@@ -1,9 +1,9 @@
 package cz.skodape.hdt.selector.identity;
 
 import cz.skodape.hdt.core.OperationFailed;
-import cz.skodape.hdt.core.Reference;
-import cz.skodape.hdt.core.ReferenceSource;
-import cz.skodape.hdt.core.Selector;
+import cz.skodape.hdt.core.reference.Reference;
+import cz.skodape.hdt.core.source.EntitySource;
+import cz.skodape.hdt.core.selector.Selector;
 import cz.skodape.hdt.core.SelectorContext;
 
 /**
@@ -11,15 +11,15 @@ import cz.skodape.hdt.core.SelectorContext;
  */
 class IdentitySelector implements Selector {
 
-    private ReferenceSource input;
+    private EntitySource input;
 
     @Override
-    public void initialize(SelectorContext context, ReferenceSource input) {
+    public void initialize(SelectorContext context, EntitySource input) {
         this.input = input;
     }
 
     @Override
-    public ReferenceSource split() throws OperationFailed {
+    public EntitySource split() throws OperationFailed {
         IdentitySelector result = new IdentitySelector();
         result.input = this.input.split();
         return result;

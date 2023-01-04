@@ -1,19 +1,19 @@
 package cz.skodape.hdt.model;
 
+import cz.skodape.hdt.model.transformation.BaseTransformation;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Root configuration file for a transformation, defines all but output.
+ * Complete transformation configuration.
  */
 public class TransformationFile {
 
+    public Map<String, TransformationSource> sources = new HashMap<>();
+
     public BaseTransformation transformation;
 
-    public String rootSource;
-
-    public String propertySource;
-
-    public Map<String, SourceConfiguration> sources = new HashMap<>();
+    public TransformationTarget target;
 
 }

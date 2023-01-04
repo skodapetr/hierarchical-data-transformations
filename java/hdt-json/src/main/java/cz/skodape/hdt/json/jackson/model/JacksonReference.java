@@ -1,6 +1,6 @@
 package cz.skodape.hdt.json.jackson.model;
 
-import cz.skodape.hdt.core.Reference;
+import cz.skodape.hdt.core.reference.Reference;
 
 import java.util.Collections;
 import java.util.List;

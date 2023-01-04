@@ -1,0 +1,25 @@
+name: Deploy specification
+on:
+  push:
+    branches: [ "main" ]
+jobs:
+  main:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          cache: "pip"
+      - name: Install Bikeshed
+        run: pip install bikeshed
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Build specification
+        working-directory: ./specification
+        run: bikeshed spec
+      - name: Deploy GitHub pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./specification

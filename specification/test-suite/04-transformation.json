@@ -1,0 +1,49 @@
+{
+  "schema": "https://skodapetr.github.io/hierarchical-data-transformations/specification/2022-12/schema",
+  "transformation": {
+    "$value": {
+      "@type": "object",
+      "@properties": {
+        "type": {
+          "@type": "string",
+          "@value": "Person"
+        },
+        "titles": {
+          "@type": "array",
+          "@items": [{
+            "@type": "string",
+            "@value": "Mgr"
+          }, {
+            "@type": "object",
+            "@properties": {
+              "label": {
+                "@type": "string",
+                "@value": "Ph.D."
+              },
+              "valid": {
+                "@type": "boolean",
+                "@value": "false"
+              }
+            }
+          }]
+        },
+        "connections": {
+          "@type": "array",
+          "@items": [{
+            "@type": "array",
+            "@items": [{
+              "@type": "number",
+              "@value": 1
+            }, {
+              "@type": "number",
+              "@value": 2
+            }]
+          }, {
+            "@type": "number",
+            "@value": 3
+          }]
+        }
+      }
+    }    
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "@type": ["object"],
+  "name": [{
+    "@type": ["string"],
+    "@value": ["Glass"]
+  }],
+  "prices": [{
+    "@type": ["object"],
+    "currency": [{
+      "@type": ["string"],
+      "@value": ["CZK"]
+    }],
+    "value": [{
+      "@type": ["number"],
+      "@value": ["12"]
+    }]
+  }]
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "https://skodapetr.github.io/hierarchical-data-transformations/specification/2022-12/schema",
+  "transformation": {
+    "$value": {
+      "@type": "array",
+      "@items": [{
+        "@type": "string",
+        "@value": "First"
+      }, {
+        "@type": "object",
+        "@properties": {
+          "label": {
+            "@type": "string",
+            "@value": "Second"
+          }
+        }
+      }]
+    }
+  }
+}

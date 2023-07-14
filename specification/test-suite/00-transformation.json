@@ -1,0 +1,14 @@
+{
+  "schema": "https://skodapetr.github.io/hierarchical-data-transformations/specification/2022-12/schema",
+  "transformation": {
+    "$value": {
+      "@type": "object",
+      "@properties": {
+        "label": {
+          "@type": "string",
+          "@value": "This is output with object and key/value pair."
+        }
+      }
+    }
+  }
+}

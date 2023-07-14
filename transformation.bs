@@ -1,0 +1,443 @@
+<pre class='metadata'>
+Title: Hierarchical Data Transformations
+Shortname: HDT
+Boilerplate: conformance no, copyright no
+Repository: https://github.com/skodapetr/hierarchical-data-transformations
+Markup Shorthands: markdown yes
+Level: 1
+Status: LD
+URL: https://skodapetr.github.io/hierarchical-data-transformations/specification/
+Editor: Petr Škoda,
+Abstract: This specification describes the transformation model and functionality.
+</pre>
+
+<!-- https://tabatkins.github.io/bikeshed/ -->
+
+Introduction {#introduction}
+============================
+The basic idea stands on two pillars.
+First is a unified representation (Ur) [[#unified-representation]] of hierarchical data.
+JSON document with only string values allowed is a good approximation of Ur.
+We provide more detail on this topic in the [[##source-mapping]].
+The second pillar is a transformation of the Ur.
+These two combined allow for data transformation by importing the data into Ur, performing operations and finally exporting data back to the format of choice.
+
+When it comes to implementation, there are three main components: a source ([[#source]]), a transformer ([[#transformation]]) and a sink ([[#sink]]).
+The transformer is given a transformation template (query) and combines it with data from a source.
+The output of the transformer is fed to the sink in form of events.
+The sink is responsible for saving data in different formats. 
+It is important to note that Ur produced by the source and Ur produced by the sink are format specific. 
+In other words, the query must be format specific.
+
+<div class=note>
+The source code bellow is a recomendation for implementation.
+</div>
+
+Source {#source}
+================
+A source can be used to load a reference to an entity (*EntityReference*) and its properties (*ArrayReference*) and particular values (*ValueReference*).
+Each entity acts as a referecne/state holder for a particular source.
+
+The common interface for all references is a *Reference*.
+The existence of a reference can force the transformer to keep open resources or data in memory.
+Since managed languages do not provide scope-based resource management, we introduce an explicit method to close the reference.
+
+```Java
+interface Reference {
+
+  /**
+   * Anounce that we no longer need this reference.
+   */
+  void close();
+
+}
+```
+
+The *EntityReference* represent a reference to a particular entity/object in the source. 
+You can obtain *EntityReference* using *EntitySource* ([[#source-entity]]).
+
+```Java
+interface EntityReference extends Reference {
+
+}
+```
+
+The *ArrayReference* represent one of more values being that *EntityReference* or *ValueReference*.
+As a simplification we consider every key of a property to have array of values.
+It is important to note that this does not map directly to the array in the source.
+Instead this express the idea that a property can have zero, one, or many values.
+You can obtain items from *ArrayReference* using *ArraySource* ([[#source-array]]).
+
+```Java
+interface ArrayReference extends Reference {
+
+}
+```
+
+Primitive values, strings, are represented using *ValueReference*.
+The value can be obtained using *PropertySources* ([[#source-property]]).
+
+```Java
+interface ValueReference extends Reference {
+
+}
+```
+
+## DocumentSource ## {#source-document}
+*DocumentSource* act as an iterator for of the document to transform.
+It iterates only the direct descendants of the document root.
+A single root object is represented as an *EntityReference*.
+A single root primitive value is represented as a *ValueReference*.
+Multiple values are represented as *ArrayReference*.
+
+```Java
+interface DocumentSource {
+
+  /**
+   * Return next EntityReference or null when there is nothing more to iterate.
+   */
+  Reference next();
+
+}
+```
+
+## EntitySource ## {#source-entity}
+Similar to PHP associative arrays, objects and arrays are effectively the same in Ur.
+Both are represented using *EntityReference* and can be accessed using *EntitySource*.
+
+A simple example is reading the values of a property in a JSON object.
+Another example can be reading from an array in JSON. 
+A more complete example is navigating from child to parent in JSON.
+
+```Java
+interface EntitySource {
+
+  /**
+   * Return reference to values under given key or null it the key does not exists.
+   */
+  ArrayReference property(EntityReference reference, String property);
+
+  /**
+   * Return reference to all parents who have given entity stored under given key.
+   */
+  ArrayReference reverseProperty(Reference reference, String property);
+
+  /**
+   * Return reference to all items, keys and values, in given entity.
+   */
+  ArrayReference items(EntityReference reference);
+
+}
+```
+
+## ArraySource ## {#source-array}
+*ArrayReference* can refere to zero or many values.
+
+```Java
+interface ArraySource {
+
+  /**
+   * Retun next referece or null when there are no other values.
+   */
+  Reference next(ArrayReference reference);
+
+  /**
+   * Return independet clone of a given array reference.
+   */
+  ArrayReference clone(ArrayReference reference);
+
+}
+```
+
+## PropertySource ## {#source-property}
+The only primitive value is a string. 
+Yet as the string can be quite big, we do not put its value to the *ValueReference*.
+Instead, we employ a source to load and return the value on demand.
+
+```Java
+interface PropertySource {
+
+  /**
+   * Return string value of a referecne.
+   */
+  String value(ValueReference reference);
+
+}
+```
+
+Sink {#sink}
+============
+A sink is capable of consuming the Ur representation and producing output in a desired format.
+As there can be multiple mappings from Ur to any format, the sink is format specific.
+The sink is event-based similar to SAX for XML.
+The events indicate the opening/closing of context (object, array), primitive values, and keys.
+As a result, sinks can be used in a streaming manner.
+
+Since primitive values in Ur are only strings, the sink must provide a way how to allow a user to specify the output type of a primitive value.
+It is recommended to find inspiration from RDF, where a literal consists of a string value and a type. 
+Similar holds true for distiction of object and arrays.
+The "@" prefix must be used for sink specific control properties.
+
+```Java
+interface Sink {
+
+  void openObject();
+
+  void closeObject();
+
+  void openArray();
+
+  void closeArray();
+
+  void setNextKey(String key);
+
+  void writeValue(String value);
+
+}
+```
+
+Transformation {#transformation}
+================================
+A transformation is based on a user-given template.
+The template may contain constant data that are just sent to a sink or active elements using data from a source.
+The active elements consits of *navigation*, *filtering*, and *use*.
+
+*Use* refers to simple reading primitive value, string, from source and forwarding it to a sink.
+
+*Navigation* allow to traverse from entity to entity.
+
+*Filtering* allow to apply filters on keys or primitive values in order to restrinct data consumed by the template..
+
+Unified representation {#unified-representation}
+================================================
+As mentioned in the introduction, a restricted JSON is a good analogy for unified representation (Ur).
+
+Ur consists of entities, arrays, and values.
+Entities can be used to represent objects and arrays. 
+Objects and arrays are represented as a collection of key/index and value pairs.
+Arrays are used to represent multiple values for given key in an entity.
+All values in Ur are strings.
+
+The translation between any format and Ur is source and sink specific.
+While it is not necessary, we recoomend sink to be able to convert values from source.
+In other words connecting sink directly to a source should produce data as given on the input.
+
+In this document we propose two conversios, from JSON and RDF.
+
+## JSON Example ## {#unified-representation-json-example}
+Data in JSON:
+```JSON
+{
+  "name": "Ailish",
+  "age": 18,
+  "items": [
+    "Milk",
+    "Bread"
+  ],
+  "properties": {
+    "inteligence": 100,
+    "knowledge": 100
+  }
+}
+```
+Data in Ur written using limited JSON notation:
+```JSON
+{
+  "@type": ["object"],
+  "name": [{
+    "@type": ["string"],
+    "@value": ["Ailish"]
+  }],
+  "age": [{
+    "@type": ["number"],
+    "@value": ["18"]
+  }],
+  "items": [{
+    "@type": ["array"],
+    "0": [{
+      "@type": ["string"],
+      "@value": ["Milk"]
+    }],
+    "1": [{
+      "@type": ["string"],
+      "@value": ["Bread"]
+    }]
+  }],
+  "properties": [{
+    "@type": ["object"],
+    "inteligence": [{
+      "@type": ["number"],
+      "@value": ["100"]
+    }],
+    "knowledge": [{
+      "@type": ["number"],
+      "@value": ["100"]
+    }]
+  }]
+}
+```
+As we can see in the example there is no distiction between JSON object and JSON array besides the ```@type``` values.
+This is similar to PHP associative arrays.
+In addition all values are in an arrays even thou they represent a single value.
+The heavy use of array creates for more unified enviroment; there can be always 0 to many values.
+We can see this in the design of *EntitySource* ([[#source-entity]]).
+
+Using multiple values in an array in not expected by the sink.
+Should sink ancounter such situation it should provide user with an exception and use first or last value from the array.
+
+## RDF Example  ## {#unified-representation-rdf-example}
+Data in RDF Turtle:
+```Turtle
+<http://example.com/Ailish>
+  <http://example.com/name> "Ailish"@en ;
+  <http://example.com/age> 18 ;
+  <http://example.com/items> "Milk", "Bread" ;
+  <http://example.com/properties> [
+    <http://example.com/type> "inteligence" ;
+    <http://example.com/value> 100 .
+  ], [
+    <http://example.com/type> "knowledge" ;
+    <http://example.com/value> 100 .
+  ];
+```
+Data in Ur written using limited JSON notation:
+```JSON
+{
+  "@id": ["http://example.com/Ailish"],
+  "http://example.com/name": [{
+    "@value": ["Ailish"],    
+    "@type": ["http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"],
+    "@language": ["en"]
+  }],
+  "http://example.com/age": [{
+    "@value": ["18"],
+    "@type": ["http://www.w3.org/2001/XMLSchema#integer"]
+  }],
+  "http://example.com/items": [{
+    "@value":["Milk"],
+    "@type": ["http://www.w3.org/2001/XMLSchema#string"]      
+  }, {
+    "@value":["Bread"],
+    "@type": ["http://www.w3.org/2001/XMLSchema#string"]      
+  }],
+  "http://example.com/properties": [{
+    "http://example.com/type": [{
+      "@value":["inteligence"],
+      "@type": ["http://www.w3.org/2001/XMLSchema#string"]
+    }],
+    "http://example.com/value": [{
+      "@value": ["100"]
+      "@type": ["http://www.w3.org/2001/XMLSchema#integer"]
+    }]
+  }, {
+    "http://example.com/type": [{
+      "@value":["knowledge"],
+      "@type": ["http://www.w3.org/2001/XMLSchema#string"]
+    }],
+    "http://example.com/value": [{
+      "@value": ["100"]
+      "@type": ["http://www.w3.org/2001/XMLSchema#integer"]
+    }]
+  }]
+}
+```
+
+We can see that unlike in JSON there are arrays with multiple values, for example http://example.com/items or http://example.com/properties.
+The reason is that RDF does not provide order of triples, as a result we employ different conversion.
+On the other hand we can see use of single value array for control properties such as @value, @type, @language, and @id.
+
+It is clear that should user want to use the Ur produced by RDF as an input for JSON sink, this need to be updated.
+
+Transformation language {#transformation-language}
+==================================================
+Instead of providing full specifications, we provide examples to demonstrate desired functionality and notation.
+We employ JSON to write the definition, yet keep in mind that any language that can be converted into a similar structure can be utilized.
+
+<div class=example id=example-00>
+Constant output of an JSON object.
+
+[Transformation](./test-suite/00-transformation.json)
+[Output](./test-suite/00-output.json)
+</div>
+
+<div class=example id=example-01>
+Constant output of an JSON array.
+
+[Transformation](./test-suite/01-transformation.json)
+[Output](./test-suite/01-output.json)
+</div>
+
+<div class=example id=example-02>
+Constant output of object with nested values.
+
+[Transformation](./test-suite/02-transformation.json)
+[Output](./test-suite/02-output.json)
+</div>
+
+<div class=example id=example-03>
+Array definition can contain multiple items.
+Items for given mapping are generated at once.
+
+[Transformation](./test-suite/03-transformation.json)
+[Output](./test-suite/03-output.json)
+</div>
+
+<div class=example id=example-04>
+Combination of objects and arrays to construct complex output.
+
+[Transformation](./test-suite/04-transformation.json)
+[Output](./test-suite/04-output.json)
+</div>
+
+<div class=example id=example-05>
+Replace a value in object with a value from a simple sub-tree.
+
+[Input](./test-suite/05-input.json)
+[Transformation](./test-suite/05-transformation.json)
+[Output](./test-suite/05-output.json)
+</div>
+
+<div class=example id=example-06>
+Replace a value in objects with a value from a simple sub-tree.
+Objects are located in array.
+
+[Input](./test-suite/06-input.json)
+[Transformation](./test-suite/06-transformation.json)
+[Output](./test-suite/06-output.json)
+</div>
+
+<div class=example id=example-07>
+Reduce two objects to one.
+Expand values from a sub-object.
+
+[Input](./test-suite/07-input.json)
+[Transformation](./test-suite/07-transformation.json)
+[Output](./test-suite/07-output.json)
+</div>
+
+<div class=example id=example-08>
+Inspired by RDF language string implementation.
+
+[Input](./test-suite/08-input.json)
+[Transformation](./test-suite/08-transformation.json)
+[Output](./test-suite/08-output.json)
+</div>
+
+<div class=example id=example-09>
+Merge Object in Array.
+
+[Input](./test-suite/09-input.json)
+[Transformation](./test-suite/09-transformation.json)
+[Output](./test-suite/09-output.json)
+</div>
+
+<div class=example id=example-10>
+Select properties from object sub-tree.
+The original idea was that we must not select ```props``` to generate the output object.
+Instead we need to keep the reference for the main object. 
+
+[Input](./test-suite/10-input.json)
+[Transformation](./test-suite/10-transformation.json)
+[Output](./test-suite/10-output.json)
+
+</div>

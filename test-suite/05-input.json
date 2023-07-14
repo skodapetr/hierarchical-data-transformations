@@ -1,0 +1,7 @@
+{
+  "name": "Glass",
+  "price": {
+    "currency": "CZK",
+    "value": 12
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "Person",
+  "titles": [
+    "Mgr.",
+    {
+      "label": "Ph.D.",
+      "valid": false
+    }
+  ],
+  "connections": [
+    [
+      1,
+      2
+    ],
+    3
+  ]
+}

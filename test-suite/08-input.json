@@ -1,0 +1,12 @@
+{
+  "skos:prefLabel": [
+    {
+      "@language": "cs",
+      "@value": "Typy pracovních míst na vysoké škole"
+    },
+    {
+      "@language": "en",
+      "@value": "Position types at a university"
+    }
+  ]
+}

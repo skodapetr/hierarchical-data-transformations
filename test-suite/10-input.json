@@ -1,0 +1,12 @@
+{
+  "props": [
+    {
+      "type": "Price",
+      "value": 12
+    },
+    {
+      "type": "Name",
+      "value": "Glass"
+    }
+  ]
+}

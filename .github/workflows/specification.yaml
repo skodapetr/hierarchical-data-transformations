@@ -6,6 +6,8 @@ jobs:
   main:
     runs-on: ubuntu-22.04
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
       - name: Setup python
         uses: actions/setup-python@v4
         with:
@@ -13,8 +15,6 @@ jobs:
           cache: "pip"
       - name: Install Bikeshed
         run: pip install bikeshed
-      - name: Checkout repository
-        uses: actions/checkout@v2
       - name: Build specification
         working-directory: ./specification
         run: bikeshed spec
